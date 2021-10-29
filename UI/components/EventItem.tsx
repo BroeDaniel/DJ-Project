@@ -12,7 +12,7 @@ type JSONValue = {
   date: string;
   time: string;
   description: string;
-  image: string;
+  image: any;
 };
 
 type pageProps = {
@@ -36,14 +36,16 @@ export default function EventItem({ evt }: pageProps) {
     <div className={styles.event}>
       <div className={styles.img}>
         <Image
-          src={image ? image : '/images/event-default.png'}
+          src={
+            image ? image.formats.thumbnail.url : '/images/event-default.png'
+          }
           height={100}
           width={170}
         />
       </div>
       <div className={styles.info}>
         <span>
-          {date} at {time}
+          {new Date(date).toLocaleDateString('en-DK')} at {time}
         </span>
         <h3>{name}</h3>
       </div>
