@@ -1,5 +1,5 @@
 import styles from '@/styles/Search.module.css';
-import { useState, MouseEvent, ChangeEvent } from 'react';
+import { useState, ChangeEvent, KeyboardEvent } from 'react';
 import { useRouter } from 'next/router';
 
 export default function Search() {
@@ -10,7 +10,7 @@ export default function Search() {
     setTerm(e.target.value);
   };
 
-  const handleSubmit = (e: MouseEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: KeyboardEvent<HTMLFormElement>): void => {
     e.preventDefault();
     router.push(`/events/search?term=${term}`);
     setTerm('');
