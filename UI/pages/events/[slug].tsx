@@ -10,6 +10,9 @@ import {
 } from 'next';
 import { API_URL } from '../../config/index';
 import styles from '@/styles/Event.module.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 
 type JSONValue = {
   id: string;
@@ -40,8 +43,22 @@ type pageProps = {
 };
 
 export default function EventPage({ evt }: pageProps) {
-  const deleteEvent = (e: MouseEvent<HTMLAnchorElement>) => {
-    console.log(e);
+  const router = useRouter();
+
+  const deleteEvent = async (e: MouseEvent<HTMLAnchorElement>) => {
+    if (confirm('Are you sure?')) {
+      const res = await fetch(`${API_URL}/events/${evt.id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message);
+      } else {
+        router.push('/events');
+      }
+    }
   };
 
   return (
@@ -61,6 +78,7 @@ export default function EventPage({ evt }: pageProps) {
           {new Date(evt.date).toLocaleDateString('da-DK')} at {evt.time}
         </span>
         <h1>{evt.name}</h1>
+        <ToastContainer />
         {evt.image && (
           <div className={styles.image}>
             <Image
