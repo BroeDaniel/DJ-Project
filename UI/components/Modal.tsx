@@ -10,6 +10,11 @@ type ComponentProps = {
   title?: string;
 };
 
+type PortalProps = {
+  children: ReactNode;
+  container: HTMLElement | null;
+};
+
 export default function Modal({
   show,
   onClose,
@@ -44,7 +49,7 @@ export default function Modal({
   if (isBrowser) {
     return ReactDom.createPortal(
       modalContent,
-      document.getElementById('modal-root')
+      document.getElementById('modal-root')!
     );
   } else {
     return null;

@@ -11,6 +11,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { GetServerSidePropsResult } from 'next';
 import moment from 'moment';
+import ImageUpload from '../../../components/ImageUpload';
 
 type Params = {
   params: {
@@ -53,6 +54,13 @@ export default function EditEventPage({ evt }: pageProps) {
   const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
+
+  const imageUploaded = async () => {
+    const res = await fetch(`${API_URL}/events/${evt.id}`);
+    const data = await res.json();
+    setImagePreview(data.formats.thumbnail.url);
+    setShowModal(false);
+  };
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -182,7 +190,7 @@ export default function EditEventPage({ evt }: pageProps) {
         </button>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        Image Upload
+        <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
       </Modal>
     </Layout>
   );
