@@ -1,4 +1,5 @@
 import Layout from '@/components/layout';
+import Modal from '@/components/Modal';
 import { FaImage } from 'react-icons/fa';
 import styles from '@/styles/Form.module.css';
 import { useState, ChangeEvent, MouseEvent } from 'react';
@@ -48,6 +49,8 @@ export default function EditEventPage({ evt }: pageProps) {
   const [imagePreview, setImagePreview] = useState(
     evt.image ? evt.image.formats.thumbnail.url : null
   );
+
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();
 
@@ -174,10 +177,13 @@ export default function EditEventPage({ evt }: pageProps) {
       )}
 
       <div>
-        <button className='btn-secondary'>
+        <button className='btn-secondary' onClick={() => setShowModal(true)}>
           <FaImage /> Set image
         </button>
       </div>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        Image Upload
+      </Modal>
     </Layout>
   );
 }
