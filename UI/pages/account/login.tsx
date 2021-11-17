@@ -12,6 +12,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const { login, error } = useContext(AuthContext);
 
+  useEffect(() => {
+    error && toast.error(Object.values(error)[0]);
+  }, [error]);
+
   const handleSubmit = (e: MouseEvent<HTMLFormElement>) => {
     e.preventDefault();
     login({ email, password });

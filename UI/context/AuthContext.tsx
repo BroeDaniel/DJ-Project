@@ -1,10 +1,10 @@
 import { createContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/router';
-import { API_URL } from '../config/index';
+import { NEXT_URL } from '../config/index';
 
 interface AppContextInterface {
   user: user | null;
-  error: string | null;
+  error: error | null;
   register: (user: user) => void;
   login: (user: user) => void;
   logout: () => void;
@@ -20,6 +20,10 @@ type user = {
   password: string;
 };
 
+type error = {
+  message: string;
+};
+
 const defaultValue = {
   user: null,
   error: null,
@@ -30,8 +34,8 @@ const AuthContext = createContext<AppContextInterface>(
 );
 
 export const AuthProvider = ({ children }: ProviderProps) => {
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const [user, setUser] = useState(defaultValue.user);
+  const [error, setError] = useState(defaultValue.error);
 
   // Register a user
   const register = async (user: user): Promise<void> => {
@@ -44,7 +48,23 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     email: identifier,
     password,
   }: user): Promise<void> => {
-    console.log(identifier, password);
+    // First request Strapi via api/login
+    const res = await fetch(`${NEXT_URL}/api/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ identifier, password }),
+    });
+    // Comes back from api/login route used for login form via login tsx where res.status.json is sunding the object that turns into data variable
+    const data = await res.json();
+    if (res.ok) {
+      setUser(data.user);
+    } else {
+      console.log(data.message);
+      setError(data);
+    }
+    // console.log(identifier, password);
   };
 
   // Logout user
