@@ -17,6 +17,15 @@ type Params = {
   params: {
     id: string;
   };
+  req: Req;
+};
+
+type Req = {
+  headers: HeadersContent;
+};
+
+type HeadersContent = {
+  cookie: string;
 };
 
 type JSONValue = {
@@ -198,9 +207,12 @@ export default function EditEventPage({ evt }: pageProps) {
 
 export async function getServerSideProps({
   params: { id },
+  req,
 }: Params): Promise<GetServerSidePropsResult<pageProps>> {
   const res = await fetch(`${API_URL}/events/${id}`);
   const evt = await res.json();
+
+  console.log(req.headers.cookie);
   return {
     props: {
       evt,

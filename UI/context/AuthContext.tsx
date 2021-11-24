@@ -10,6 +10,8 @@ interface AppContextInterface {
   logout: () => void;
 }
 
+// TYPES
+
 type ProviderProps = {
   children: ReactNode;
 };
@@ -36,6 +38,11 @@ const AuthContext = createContext<AppContextInterface>(
 export const AuthProvider = ({ children }: ProviderProps) => {
   const [user, setUser] = useState(defaultValue.user);
   const [error, setError] = useState(defaultValue.error);
+  const router = useRouter();
+
+  useEffect(() => {
+    checkUserLoggedIn();
+  }, []);
 
   // Register a user
   const register = async (user: user): Promise<void> => {
@@ -73,8 +80,16 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   };
 
   // Check is the user is logged in
-  const checkUserLoggedIn = async (user: user): Promise<void> => {
-    console.log('Check');
+  const checkUserLoggedIn = async (): Promise<void> => {
+    const res = await fetch(`${NEXT_URL}/api/user`);
+    const data = await res.json();
+
+    if (res.ok) {
+      setUser(data.user);
+      router.push('/account/dashboard');
+    } else {
+      setUser(null);
+    }
   };
 
   return (
