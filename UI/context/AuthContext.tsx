@@ -47,7 +47,22 @@ export const AuthProvider = ({ children }: ProviderProps) => {
   // Register a user
   const register = async (user: user): Promise<void> => {
     // {username, email, password}
-    console.log(user);
+    const res = await fetch(`${NEXT_URL}/api/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    });
+    // Comes back from api/login route used for login form via login tsx where res.status.json is sunding the object that turns into data variable
+    const data = await res.json();
+    if (res.ok) {
+      setUser(data.user);
+      router.push('/account/dashboard');
+    } else {
+      console.log(data.message);
+      setError(data);
+    }
   };
 
   // Login user
@@ -67,6 +82,7 @@ export const AuthProvider = ({ children }: ProviderProps) => {
     const data = await res.json();
     if (res.ok) {
       setUser(data.user);
+      router.push('/account/dashboard');
     } else {
       console.log(data.message);
       setError(data);
@@ -76,7 +92,14 @@ export const AuthProvider = ({ children }: ProviderProps) => {
 
   // Logout user
   const logout = async (): Promise<void> => {
-    console.log('Logout');
+    const res = await fetch(`${NEXT_URL}/api/logout`, {
+      method: 'POST',
+    });
+
+    if (res.ok) {
+      setUser(null);
+      router.push('/');
+    }
   };
 
   // Check is the user is logged in
