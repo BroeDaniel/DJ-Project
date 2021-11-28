@@ -26,7 +26,7 @@ export default function DashboardEvent({ evt, handleDelete }: pageProps) {
       <h4>
         <Link href={`/events/${evt.slug}`}>{evt.name}</Link>
       </h4>
-      <Link href={`/events/eidt/{evt.id}`}>
+      <Link href={`/events/edit/{evt.id}`}>
         <a className={styles.edit}>
           <FaPencilAlt /> <span>Edit Event</span>
         </a>
