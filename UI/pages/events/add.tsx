@@ -1,3 +1,4 @@
+import { parseCookie } from '@/lib/index';
 import Layout from '@/components/layout';
 import styles from '@/styles/Form.module.css';
 import { useState, ChangeEvent, MouseEvent } from 'react';
@@ -6,8 +7,18 @@ import Link from 'next/link';
 import { API_URL } from '@/config/index';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GetServerSidePropsResult } from 'next';
+import { NextApiRequest } from 'next';
 
-export default function AddEventPage() {
+type ServerProps = {
+  req: NextApiRequest;
+};
+
+type pageProps = {
+  token: string;
+};
+
+export default function AddEventPage({ token }: pageProps) {
   const [values, setValues] = useState({
     name: '',
     performers: '',
@@ -44,6 +55,7 @@ export default function AddEventPage() {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(values),
     });
@@ -134,4 +146,16 @@ export default function AddEventPage() {
       </form>
     </Layout>
   );
+}
+
+export async function getServerSideProps({
+  req,
+}: ServerProps): Promise<GetServerSidePropsResult<pageProps>> {
+  const { token } = parseCookie(req);
+
+  return {
+    props: {
+      token,
+    },
+  };
 }
