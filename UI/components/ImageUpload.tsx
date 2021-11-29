@@ -5,9 +5,14 @@ import styles from '@/styles/Form.module.css';
 type CompProps = {
   evtId: string;
   imageUploaded: () => void;
+  token: string;
 };
 
-export default function ImageUpload({ evtId, imageUploaded }: CompProps) {
+export default function ImageUpload({
+  evtId,
+  imageUploaded,
+  token,
+}: CompProps) {
   const [image, setImage] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +21,8 @@ export default function ImageUpload({ evtId, imageUploaded }: CompProps) {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: MouseEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const formData = new FormData();
     if (image !== null) {
       formData.append('files', image);
@@ -26,9 +32,13 @@ export default function ImageUpload({ evtId, imageUploaded }: CompProps) {
     } else {
       console.log('No image was uploaded');
     }
+    console.log('token', token);
 
     const res = await fetch(`${API_URL}/upload`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formData,
     });
 
