@@ -1,4 +1,5 @@
 import Layout from '@/components/layout';
+import EventMap from '@/components/EventMap';
 import Image from 'next/image';
 import {
   GetServerSidePropsResult,
@@ -92,6 +93,9 @@ export default function EventPage({ evt }: pageProps) {
         <p>{evt.description}</p>
         <h3>Venue: {evt.venue}</h3>
         <p>{evt.address}</p>
+
+        <EventMap evt={evt} />
+
         <Link href='/events'>
           <a className={styles.back}>{'<'} Go back</a>
         </Link>
