@@ -52,14 +52,11 @@ export default function EventMap({ evt }: pageProps) {
   Geocode.setApiKey(process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string);
 
   if (loading) return <div>Loading...</div>;
-  console.log(lat, lng);
   if (lat && lng !== null) {
     return (
       <ReactMapGl
         {...viewport}
-        mapboxApiAccessToken={
-          'pk.eyJ1IjoiZGFuaWVsYnJvZTciLCJhIjoiY2t3bTVicjhnMHp6YjJ2bXRvODdmYjJsZSJ9.XyfQxwMPpOyX3T84WODJuQ'
-        }
+        mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN_KEY}
         onViewportChange={(
           vp: SetStateAction<{
             latitude: number;
